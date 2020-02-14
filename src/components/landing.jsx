@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import {
   GridList,
   GridListTile,
@@ -117,7 +118,9 @@ class LandingPage extends Component {
     return (
       <div>
         <GridListTile key="Subheader2" cols={1} style={{ height: 'auto' }}>
-          <ListSubheader component="h1">Users</ListSubheader>
+          <Link to="/users">
+            <ListSubheader component="h1">Users</ListSubheader>
+          </Link>
           {users && <Users users={users} />}
         </GridListTile>
         <GridListTile key="Subheader" cols={1} style={{ height: 'auto' }}>

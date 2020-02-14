@@ -27,8 +27,6 @@ const getData = async url => {
   }
 };
 
-console.log('what are my process.env: ', process.env.UNSPLASH_ACCESS_KEY)
-
 app.get('/posts', async (req, res) => {
   const result = await getData('http://jsonplaceholder.typicode.com/posts')
   return res.send(result);
@@ -52,6 +50,7 @@ app.get('/photos', async (req, res) => {
 });
 
 app.get('/users', async (req, res) => {
+  // This Api limits users to 10 count, so the dog photos and users match up exactly
   const userResults = await getData('http://jsonplaceholder.typicode.com/users')
   const dogPhotos = await unsplash.search.photos("dogs", 1, 10, { orientation: "portrait" })
     .then(toJson)
