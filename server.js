@@ -14,7 +14,7 @@ const unsplash = new Unsplash({ accessKey: process.env.UNSPLASH_ACCESS_KEY });
 
 // NOTE: currently not doing any SSR so we wont be serving a build folder
 // app.use(express.static(path.join(__dirname, 'build')));
-const { joinAlbumsWithPhotos } = require('./server/util')
+const { joinAlbumsWithPhotos, joinPostsWithComments } = require('./server/util')
 
 const getData = async url => {
   try {
@@ -28,14 +28,16 @@ const getData = async url => {
 };
 
 app.get('/posts', async (req, res) => {
-  const result = await getData('http://jsonplaceholder.typicode.com/posts')
+  const postResult = await getData('http://jsonplaceholder.typicode.com/posts')
+  const commentResult = await getData('http://jsonplaceholder.typicode.com/comments')
+  const result = joinPostsWithComments({ posts: postResult, comments: commentResult })
   return res.send(result);
 });
 
-app.get('/comments', async (req, res) => {
-  const result = await getData('http://jsonplaceholder.typicode.com/comments')
-  return res.send(result);
-});
+// app.get('/comments', async (req, res) => {
+//   const result = await getData('http://jsonplaceholder.typicode.com/comments')
+//   return res.send(result);
+// });
 
 app.get('/albums', async (req, res) => {
   const albumResult = await getData('http://jsonplaceholder.typicode.com/albums')
@@ -44,10 +46,10 @@ app.get('/albums', async (req, res) => {
   return res.send(result);
 });
 
-app.get('/photos', async (req, res) => {
-  const result = await getData('http://jsonplaceholder.typicode.com/photos')
-  return res.send(result);
-});
+// app.get('/photos', async (req, res) => {
+//   const result = await getData('http://jsonplaceholder.typicode.com/photos')
+//   return res.send(result);
+// });
 
 app.get('/users', async (req, res) => {
   // This Api limits users to 10 count, so the dog photos and users match up exactly

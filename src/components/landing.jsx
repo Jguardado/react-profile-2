@@ -5,7 +5,8 @@ import {
   GridListTile,
   GridListTileBar,
   ListSubheader,
-  IconButton
+  IconButton,
+  Container
 } from '@material-ui/core';
 import { connect } from 'react-redux';
 import { bootstrapLandingPage } from '../actions';
@@ -59,7 +60,7 @@ const Albums = ({ albums }) => {
     <div className={classes.root}>
       <GridList cellHeight={160} className={classes.gridList} cols={3}>
         {albums.map(album => (
-          <GridListTile key={album.id} cols={3}>
+          <GridListTile key={album.id} cols={1}>
             <img src={album.photos[0].thumbnailUrl} alt={album.title} />
             <GridListTileBar
               title={album.title}
@@ -80,26 +81,31 @@ const Albums = ({ albums }) => {
   );
 };
 
-const Users = ({ users }) => {
+const Users = ({ users, handleClick }) => {
   const classes = usersStyles();
   return (
     <div className={classes.root}>
       <GridList className={classes.gridList} cols={2.5}>
         {users.map(user => (
-          <GridListTile key={user.img}>
-            <img src={user.img} alt={user.name} />
-            <GridListTileBar
-              title={user.name}
-              classes={{
-                root: classes.titleBar,
-                title: classes.title
-              }}
-              actionIcon={
-                <IconButton aria-label={`star ${user.name}`}>
-                  <StarBorderIcon className={classes.title} />
-                </IconButton>
-              }
-            />
+          <GridListTile
+            onClick={() => handleClick({ id: user.id })}
+            key={user.img}
+          >
+            <Link to={`/users/${user.id}`}>
+              <img style={{ width: '100%' }} src={user.img} alt={user.name} />
+              <GridListTileBar
+                title={user.name}
+                classes={{
+                  root: classes.titleBar,
+                  title: classes.title
+                }}
+                actionIcon={
+                  <IconButton aria-label={`star ${user.name}`}>
+                    <StarBorderIcon className={classes.title} />
+                  </IconButton>
+                }
+              />
+            </Link>
           </GridListTile>
         ))}
       </GridList>
@@ -114,14 +120,14 @@ class LandingPage extends Component {
   }
 
   render() {
-    const { albums, users } = this.props;
+    const { albums, users, setActiveUser } = this.props;
     return (
       <div>
         <GridListTile key="Subheader2" cols={1} style={{ height: 'auto' }}>
           <Link to="/users">
             <ListSubheader component="h1">Users</ListSubheader>
           </Link>
-          {users && <Users users={users} />}
+          {users && <Users users={users} handleClick={setActiveUser} />}
         </GridListTile>
         <GridListTile key="Subheader" cols={1} style={{ height: 'auto' }}>
           <ListSubheader component="h1">Albums</ListSubheader>
@@ -138,7 +144,8 @@ const mapState = state => ({
 });
 
 const mapDispatch = dispatch => ({
-  init: async () => dispatch(await bootstrapLandingPage())
+  init: async () => dispatch(await bootstrapLandingPage()),
+  setActiveUser: id => dispatch({ type: 'SET_ACTIVE_USERS', payload: id })
 });
 
 export default connect(mapState, mapDispatch)(LandingPage);

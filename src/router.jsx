@@ -1,6 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import LandingPage from './components/landing';
+import UsersPage from './components/UsersPage';
+import UserPage from './components/UserPage';
 export default function RouterPage() {
   return (
     <Router>
@@ -8,6 +10,9 @@ export default function RouterPage() {
         {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
         <Switch>
+          <Route path="/users/:userId">
+            <UserPage />
+          </Route>
           <Route path="/users">
             <UsersPage />
           </Route>
@@ -25,8 +30,4 @@ export default function RouterPage() {
 
 function AlbumsPage() {
   return <h2>AlbumsPage</h2>;
-}
-
-function UsersPage() {
-  return <h2>UsersPage</h2>;
 }
